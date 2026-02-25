@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>HLS Player</title>
+  <style>
+    body { font-family: sans-serif; background: #111; color: #fff; }
+    video { width: 100%; max-width: 800px; display: block; margin-top: 10px; }
+    select, button, input { margin: 5px 0; }
+  </style>
+</head>
+<body>
+
+<h2>Upload & HLS Player</h2>
+
+<input type="number" id="episodeId" placeholder="Episode ID" />
+<input type="file" id="fileInput" />
+<button id="uploadBtn">Upload & Convert</button>
+
+<br>
+<label>Качество:</label>
+<select id="qualitySelect"></select>
+
+<video id="video" controls></video>
+
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+<script>
+  const video = document.getElementById('video');
+  const uploadBtn = document.getElementById('uploadBtn');
+  const fileInput = document.getElementById('fileInput');
+  const episodeIdInput = document.getElementById('episodeId');
+  const qualitySelect = document.getElementById('qualitySelect');
+
+  let hls;
+
+  uploadBtn.onclick = async () => {
+    const episodeId = episodeIdInput.value;
+    const file = fileInput.files[0];
+    if (!episodeId || !file) {
+      alert('Укажи episodeId и выбери файл');
+      return;
+    }
+
+    uploadBtn.disabled = true;
+    uploadBtn.innerText = 'Конвертация...';
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const res = await fetch(`/video/${episodeId}/upload`, {
+      method: 'POST',
+      body: formData,
+    });
+
+    const data = await res.json();
+    uploadBtn.innerText = 'Готово';
+    uploadBtn.disabled = false;
+
+    initPlayer(data.hlsPath);
+  };
+
+  function initPlayer(hlsPath) {
+    if (hls) hls.destroy();
+
+    hls = new Hls();
+    hls.loadSource(hlsPath);
+    hls.attachMedia(video);
+
+    hls.on(Hls.Events.MANIFEST_PARSED, () => {
+      video.play();
+      buildQualityMenu();
+    });
+  }
+
+  function buildQualityMenu() {
+    qualitySelect.innerHTML = '';
+
+    hls.levels.forEach((level, index) => {
+      const option = document.createElement('option');
+      option.value = index;
+      option.text = level.height + 'p';
+      qualitySelect.appendChild(option);
+    });
+
+    qualitySelect.onchange = () => {
+      hls.currentLevel = parseInt(qualitySelect.value);
+    };
+  }
+</script>
+
+</body>
+</html>
+

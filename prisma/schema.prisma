@@ -1,0 +1,78 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum AnimeSource {
+  COMMUNITY
+  DSTUDIO
+}
+
+model User {
+  id           Int      @id @default(autoincrement())
+  email        String   @unique
+  nickname     String?  @unique
+  passwordHash String?
+  googleId     String?
+  avatarUrl    String?
+  bio          String?
+  createdAt    DateTime @default(now())
+
+  comments Comment[] // ← ВОТ ЭТО ДОБАВИТЬ
+  ratings  Rating[]
+}
+
+model Anime {
+  id          Int         @id @default(autoincrement())
+  title       String
+  description String?
+  coverUrl    String? // 🔥 обложка
+  createdAt   DateTime    @default(now())
+  cover       String?
+  source      AnimeSource @default(COMMUNITY)
+  episodes    Episode[]
+  comments    Comment[]
+  ratings     Rating[]
+}
+
+model Episode {
+  id        Int       @id @default(autoincrement())
+  title     String
+  number    Int
+  anime     Anime     @relation(fields: [animeId], references: [id])
+  animeId   Int
+  videoPath String?
+  hlsPath   String? // <- добавляем это поле
+
+  createdAt DateTime  @default(now())
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  text      String
+
+  // связи
+  animeId   Int
+  anime     Anime     @relation(fields: [animeId], references: [id], onDelete: Cascade)
+
+  userId    Int
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Rating {
+  id      Int   @id @default(autoincrement())
+  userId  Int
+  animeId Int
+  value   Int
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+  anime Anime @relation(fields: [animeId], references: [id])
+
+  @@unique([userId, animeId], name: "userId_animeId")
+}
