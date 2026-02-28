@@ -17,6 +17,8 @@ async function bootstrap() {
             'https://anidraftofficial.netlify.app',
             'https://anidraft23.netlify.app'],
     credentials: true,
+    methods: ['GET','HEAD','PUT','PATCH','POST','DELETE','OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
   });
 
   // ✅ Раздача HLS (master.m3u8 + чанки) из backend/uploads
