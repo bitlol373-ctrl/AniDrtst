@@ -14,7 +14,8 @@ async function bootstrap() {
   // ✅ CORS для фронта (Vite). Если фронт на другом домене — добавишь туда.
   app.enableCors({
     origin: ['http://localhost:5173',
-            'https://anidraftofficial.netlify.app'],
+            'https://anidraftofficial.netlify.app'
+            'https://anidraft23.netlify.app'],
     credentials: true,
   });
 
