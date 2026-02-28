@@ -23,7 +23,7 @@ async function bootstrap() {
   app.use('/uploads', express.static(join(process.cwd(), 'uploads')))
 
   const port = Number(process.env.PORT || 3000)
-  await app.listen(3000)
+  await app.listen(port, '0.0.0.0')
 
   console.log(`API listening on http://localhost:${port}`)
 }
