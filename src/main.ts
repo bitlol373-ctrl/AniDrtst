@@ -16,7 +16,7 @@ async function bootstrap() {
     origin: ['http://localhost:5173',
             'https://anidraftofficial.netlify.app'],
     credentials: true,
-  })
+  });
 
   // ✅ Раздача HLS (master.m3u8 + чанки) из backend/uploads
   // ВАЖНО: process.cwd() должен быть backend/ (когда запускаешь из backend)
