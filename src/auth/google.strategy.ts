@@ -23,7 +23,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
       clientID,
       clientSecret,
       callbackURL:
-        process.env.GOOGLE_CALLBACK_URL ?? 'http://localhost:3000/auth/google/redirect',
+        process.env.GOOGLE_CALLBACK_URL ?? 'https://anidrtst.onrender.com/auth/google/redirect',
       scope: ['email', 'profile'],
     })
   }
