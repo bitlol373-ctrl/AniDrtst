@@ -13,8 +13,9 @@ async function bootstrap() {
 
   // ✅ CORS для фронта (Vite). Если фронт на другом домене — добавишь туда.
   app.enableCors({
-    origin: ['http://localhost:5173'],
-    credentials: false,
+    origin: ['http://localhost:5173',
+            'https://anidraftofficial.netlify.app'],
+    credentials: true,
   })
 
   // ✅ Раздача HLS (master.m3u8 + чанки) из backend/uploads
