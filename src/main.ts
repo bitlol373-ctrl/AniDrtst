@@ -15,7 +15,7 @@ async function bootstrap() {
   app.enableCors({
     origin: ['http://localhost:5173',
             'https://anidraftofficial.netlify.app'
-            'https://anidraft23.netlify.app']
+            'https://anidraft23.netlify.app'] 
     credentials: true,
   });
 
